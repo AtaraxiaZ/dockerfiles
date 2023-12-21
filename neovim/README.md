@@ -29,3 +29,15 @@ Package the new container and load it in another machine
 docker save -o neovim.tar neovim:latest
 docker load -i neovim.tar
 ```
+
+You could load the neovim with the following command
+```shell
+podman run --rm -it --name neovim --userns=keep-id -v /nfs-home/lizhe/projects:/home/zhe/projects neovim nvim
+```
+
+You may change the ~/.config/containers.conf and add:
+```toml
+[engine]
+detach_keys="ctrl-q"
+```
+so that you could use ctrl-p and ctrl-n
