@@ -18,6 +18,11 @@ You'd better check with
 tldr git
 ```
 
+NOTE:
+1. You need to install Metals open a .scala file with `:MetalsInstall`
+2. You need to manually run `sbt` to download jar, so that nvim-metals have more completions
+3. You need to make sure clangd is installed 
+
 
 Exit the container
 ```shell

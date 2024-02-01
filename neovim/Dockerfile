@@ -22,8 +22,9 @@ WORKDIR /home/$user/opt
 RUN apt-get update -y       && \
     apt-get clean all       && \
     apt-get install -y -qq iputils-ping sudo rsync apt-utils x11-utils \
-    curl wget xz-utils git vim build-essential fd-find ripgrep \
-    xclip unzip python3-pip locales tree cargo python3.10-venv
+    curl wget xz-utils git vim build-essential fd-find ripgrep xclip \
+    unzip python3-pip locales tree cargo python3.10-venv bear \
+    openjdk-17-jdk-headless
 
 RUN     ln -fs /bin/bash /bin/sh
 
@@ -59,19 +60,19 @@ RUN tar xf lazygit.tar.gz lazygit && \
     rm -rf lazygit.tar.gz lazygit
 
 COPY    cargo-config.sh .
+COPY    git-config.sh .
 COPY    npm-config.sh .
 COPY    nvim-config.sh .
 COPY    python-config.sh .
 
 RUN ./cargo-config.sh && \
     rm cargo-config.sh
-
+RUN ./git-config.sh && \
+    rm git-config.sh
 RUN ./npm-config.sh && \
     rm npm-config.sh
-
-RUN ./nvim-config.sh $user && \
+RUN ./nvim-config.sh && \
     rm nvim-config.sh
-
 RUN ./python-config.sh && \
     rm python-config.sh
 
