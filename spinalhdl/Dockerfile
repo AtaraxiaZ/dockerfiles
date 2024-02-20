@@ -7,11 +7,9 @@ ENV     DEBIAN_FRONTEND=noninteractive
 ENV     TZ=Asia/Shanghai
 ENV     TERM=xterm-256color
 
-RUN     adduser --disabled-password --gecos '' $user
-
-RUN     mkdir -p /home/$user/projects /home/$user/opt
-
-RUN     chown -R $user:$user /home/$user/projects /home/$user/opt
+RUN adduser --disabled-password --gecos '' $user && \
+    mkdir -p /home/$user/projects /home/$user/opt && \
+    chown -R $user:$user /home/$user/projects /home/$user/opt
 
 WORKDIR /home/$user/opt
 

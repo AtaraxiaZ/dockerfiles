@@ -4,8 +4,6 @@ podman run -v .:/workspace -it ghcr.io/spinalhdl/docker:master
 ```
 Remainder: This image did not download any dependencies required for `sbt run`
 
-
-
 You must run coursier setup with a internet access! Otherwise check [internet-free installation of sbt](https://spinalhdl.github.io/SpinalDoc-RTD/master/SpinalHDL/Getting%20Started/Install%20and%20setup.html#installing-sbt-in-an-internet-free-linux-environment). 
 Note:
 1. You must keep the same Username in the internet machine and internet-free machine

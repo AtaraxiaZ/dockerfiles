@@ -11,60 +11,41 @@ ENV     APPIMAGE_EXTRACT_AND_RUN=1
 ENV     NODE_VERSION=18.18.0
 ENV     NVM_DIR=/home/${user}/.nvm
 
-RUN     adduser --disabled-password --gecos '' $user
+RUN adduser --disabled-password --gecos '' ${user} && \
+    mkdir -p /home/${user}/projects /home/${user}/opt && \
+    chown -R ${user}:${user} /home/${user}/projects /home/${user}/opt
 
-RUN     mkdir -p /home/$user/projects /home/$user/opt
+WORKDIR /home/${user}/opt
 
-RUN     chown -R $user:$user /home/$user/projects /home/$user/opt
-
-WORKDIR /home/$user/opt
-
-RUN apt-get update -y       && \
-    apt-get clean all       && \
+RUN apt-get update -y --no-install-recommends && \
+    apt-get clean all && \
     apt-get install -y -qq iputils-ping sudo rsync apt-utils x11-utils \
     curl wget xz-utils git vim build-essential fd-find ripgrep xclip \
     unzip python3-pip locales tree cargo python3.10-venv bear \
-    openjdk-17-jdk-headless
+    openjdk-17-jdk-headless tmux npm
 
 RUN     ln -fs /bin/bash /bin/sh
 
 # You can use `sudo su` to switch to root user
-RUN     echo "$user ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+RUN     echo "${user} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-USER    $user
+USER    ${user}
 
 ENV     PATH="/home/${user}/.nvm/versions/node/v${NODE_VERSION}/bin/:${PATH}"
 ENV     PATH="/home/${user}/opt:${PATH}"
 ENV     PATH="/home/${user}/.cargo/bin:${PATH}"
 
-RUN curl -o install.sh https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh
-RUN bash install.sh && \
-    . "$NVM_DIR/nvm.sh" && nvm install ${NODE_VERSION} && \
-    . "$NVM_DIR/nvm.sh" && nvm use v${NODE_VERSION} && \
-    . "$NVM_DIR/nvm.sh" && nvm alias default v${NODE_VERSION} && \
-    rm install.sh
+COPY --chown=${user}:${user} repositories /home/${user}/.sbt/
 
-RUN wget https://github.com/neovim/neovim/releases/latest/download/nvim.appimage
-RUN chmod u+x nvim.appimage && \
-    mv nvim.appimage nvim
+COPY --chown=${user}:${user} cargo-config.sh .
+COPY --chown=${user}:${user} git-config.sh .
+COPY --chown=${user}:${user} npm-config.sh .
+COPY --chown=${user}:${user} nvim-config.sh .
+COPY --chown=${user}:${user} python-config.sh .
+COPY --chown=${user}:${user} shell-config.sh .
+COPY --chown=${user}:${user} software-config.sh .
 
-RUN wget https://github.com/universal-ctags/ctags-nightly-build/releases/download/2023.12.18%2Bd4b20382f6d3894702ea5e58cddb93927e3e4e17/uctags-2023.12.18-linux-x86_64.tar.xz 
-RUN tar xvf uctags-2023.12.18-linux-x86_64.tar.xz && \
-    mv uctags-2023.12.18-linux-x86_64/bin/ctags . && \
-    rm -rf uctags*
-
-RUN LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*') && \
-    curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-RUN tar xf lazygit.tar.gz lazygit && \
-    sudo install lazygit /usr/local/bin && \
-    rm -rf lazygit.tar.gz lazygit
-
-COPY    cargo-config.sh .
-COPY    git-config.sh .
-COPY    npm-config.sh .
-COPY    nvim-config.sh .
-COPY    python-config.sh .
-
+RUN chmod +x *.sh
 RUN ./cargo-config.sh && \
     rm cargo-config.sh
 RUN ./git-config.sh && \
@@ -75,5 +56,11 @@ RUN ./nvim-config.sh && \
     rm nvim-config.sh
 RUN ./python-config.sh && \
     rm python-config.sh
+RUN ./shell-config.sh && \
+    rm shell-config.sh
+RUN ./software-config.sh && \
+    rm software-config.sh
 
-WORKDIR /home/$user
+WORKDIR /home/${user}
+
+CMD source /home/${user}/.bashrc

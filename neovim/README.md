@@ -7,7 +7,7 @@ docker build -t neovim .
 
 And then, open a container
 ```shell
-docker run -it -name neovim neovim
+docker run -it --name neovim neovim
 ```
 
 Open neovim under folder /home/zhe/opt/nvim, and wait for the plugins complete downloading
@@ -17,12 +17,6 @@ You'd better check with
 # And run tldr git to refresh tldr cache
 tldr git
 ```
-
-NOTE:
-1. You need to install Metals open a .scala file with `:MetalsInstall`
-2. You need to manually run `sbt` to download jar, so that nvim-metals have more completions
-3. You need to make sure clangd is installed 
-
 
 Exit the container
 ```shell
@@ -46,3 +40,11 @@ You may change the ~/.config/containers.conf and add:
 detach_keys="ctrl-q"
 ```
 so that you could use ctrl-p and ctrl-n
+
+# For Scala
+NOTE:
+1. You need to install Metals open a .scala file with `:MetalsInstall`
+2. You need to manually run `sbt update` to download jar in a SpinalHDL repo,
+with the exactly same configuration as internet free environment,
+and the `~/.cache/coursier`and `~/.ivy2`would have desired dependencies.
+3. You need to make sure clangd is installed 
