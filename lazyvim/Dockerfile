@@ -22,7 +22,9 @@ RUN apt-get update -y --no-install-recommends && \
     apt-get install -y -qq iputils-ping sudo rsync apt-utils x11-utils \
     curl wget xz-utils git vim build-essential fd-find ripgrep xclip \
     unzip python3-pip locales tree cargo python3.10-venv bear \
-    openjdk-17-jdk-headless tmux npm
+    openjdk-17-jdk-headless tmux npm cmake pkg-config gcc libudev-dev \
+    libnl-3-dev libnl-route-3-dev ninja-build valgrind python3-dev \
+    cython3 python3-docutils pandoc
 
 RUN     ln -fs /bin/bash /bin/sh
 

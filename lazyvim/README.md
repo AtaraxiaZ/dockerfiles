@@ -7,5 +7,5 @@ docker build --platform linux/amd64 -t lazyvim .
 
 And then, open a container
 ```shell
-docker run --platform linux/amd64 -it --name lazyvim lazyvim
+docker run --platform linux/amd64 -it --name lazyvim --volume=$HOME/work/:/home/zhe/work/ lazyvim
 ```
